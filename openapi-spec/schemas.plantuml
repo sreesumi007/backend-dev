@@ -1,0 +1,95 @@
+@startuml
+
+title MathGrass Schemas Diagram
+
+entity EdgeDTO {
+    id: Long
+    * firstVertex: VertexDTO
+    * secondVertex: VertexDTO
+    label: String
+}
+
+entity EvaluateAnswer200Response {
+    * isAssessmentCorrect: Boolean
+}
+
+entity EvaluateAnswerRequest {
+    * answer: String
+}
+
+entity FeedbackDTO {
+    id: Long
+    content: String
+}
+
+entity GraphDTO {
+    * id: Long
+    labels: List<LabelDTO>
+    * edges: List<EdgeDTO>
+    * vertices: List<VertexDTO>
+}
+
+entity HintDTO {
+    * id: Long
+    label: String
+    * content: String
+}
+
+entity LabelDTO {
+    * id: Long
+    * label: String
+}
+
+entity QuestionDTO {
+    * question: String
+}
+
+entity TaskCollectionDTO {
+    id: Long
+    label: String
+    tasks: List<Long>
+}
+
+entity TaskDTO {
+    * id: Long
+    * graph: GraphDTO
+    * question: QuestionDTO
+}
+
+entity TaskIdLabelTupleDTO {
+    * id: Long
+    * label: String
+}
+
+entity TaskResultDTO {
+    id: Long
+    task: Long
+    answer: String
+    submissionDate: String
+    evaluationDate: String
+    answerTrue: Boolean
+}
+
+entity TaskSolverDTO {
+    id: Long
+    label: String
+    executionDescriptor: String
+}
+
+entity VertexDTO {
+    * id: Long
+    * x: Integer
+    * y: Integer
+    label: String
+}
+
+
+GraphDTO -- "0..*" LabelDTO : labels
+GraphDTO -- "0..*" EdgeDTO : edges
+GraphDTO -- "0..*" VertexDTO : vertices
+TaskDTO -- GraphDTO : graph
+TaskDTO -- QuestionDTO : question
+EdgeDTO -- VertexDTO : firstVertex
+EdgeDTO -- VertexDTO : secondVertex
+
+@enduml
