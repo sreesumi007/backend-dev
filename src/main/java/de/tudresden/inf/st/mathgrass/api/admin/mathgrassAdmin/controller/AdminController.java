@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -43,7 +44,7 @@ public class AdminController {
         return ResponseEntity.ok(adminServices.userAuthentication(request));
     }
 
-    @GetMapping("/tokenValidity")
+    @PostMapping("/tokenValidity")
     public boolean checkTokenValidity(@RequestBody TokenValidationRequest request){
         logger.info("checkTokenValidity Service called from AdminController");
         return adminServices.checkTokenValidity(request.getToken());
