@@ -2,6 +2,9 @@ package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.controller;
 
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.TokenValidationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationResponse;
@@ -48,6 +51,23 @@ public class AdminController {
     public boolean checkTokenValidity(@RequestBody TokenValidationRequest request){
         logger.info("checkTokenValidity Service called from AdminController");
         return adminServices.checkTokenValidity(request.getToken());
+    }
+    @PostMapping("/saveGraph")
+    public void getGraphJson(@RequestBody String graphJson) {
+        System.out.println("Check saveGraph Json"+graphJson);
+    }
+
+    @PostMapping("/saveHints")
+    public void getSaveHints(@RequestBody String saveHints) {
+        System.out.println("Check saveHints Json"+saveHints);
+    }
+
+    @PostMapping("/saveQuestionAnswer")
+    public void saveQuestionAnswer(@RequestBody String questionAnswerEntity) throws JsonProcessingException {
+        System.out.println("Check questionAnswerEntity Json"+questionAnswerEntity);
+        ObjectMapper mapper = new ObjectMapper();
+        QuestionAnswerEntity question = mapper.readValue(questionAnswerEntity, QuestionAnswerEntity.class);
+        System.out.println("Check the mapped json - "+question);
     }
 
 }
