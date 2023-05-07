@@ -4,6 +4,8 @@ package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.Hint;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.HintsCollectionEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.TokenValidationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
@@ -58,8 +60,11 @@ public class AdminController {
     }
 
     @PostMapping("/saveHints")
-    public void getSaveHints(@RequestBody String saveHints) {
+    public void getSaveHints(@RequestBody String saveHints) throws JsonProcessingException {
         System.out.println("Check saveHints Json"+saveHints);
+        ObjectMapper mapper = new ObjectMapper();
+        HintsCollectionEntity hintsCollectionEntity = mapper.readValue(saveHints, HintsCollectionEntity.class);
+        System.out.println("Check the mapped json - "+hintsCollectionEntity);
     }
 
     @PostMapping("/saveQuestionAnswer")
