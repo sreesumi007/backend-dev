@@ -1,13 +1,11 @@
 package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.service;
 
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.config.JWTService;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.HintsCollectionEntity;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.Role;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.User;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.*;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationResponse;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserRegistrationRequest;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.GraphJSONRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.HintsCollectionRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.QuestionAndAnswerRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.UserRepository;
@@ -29,15 +27,18 @@ public class AdminServices {
     private final UserRepository repository;
     private final HintsCollectionRepository hintsRepository;
 
+    private final GraphJSONRepository graphJSONRepository;
+
     private final QuestionAndAnswerRepository questionAndAnswerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
-    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, QuestionAndAnswerRepository questionAndAnswerRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
+    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, GraphJSONRepository graphJSONRepository, QuestionAndAnswerRepository questionAndAnswerRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.hintsRepository = hintsRepository;
+        this.graphJSONRepository = graphJSONRepository;
         this.questionAndAnswerRepository = questionAndAnswerRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -145,6 +146,18 @@ public class AdminServices {
         return SUCCESS_RESPONSE;
     }
 
+    public String saveGraphJson(GraphEntity graphEntity) {
+
+        try{
+            graphJSONRepository.save(graphEntity);
+        }
+        catch (Exception e){
+            logger.error("Exception occurred in saving the Graph JSON {}",e.getMessage().toString());
+        }
+
+        return SUCCESS_RESPONSE;
+    }
+
 
     public List<HintsCollectionEntity> getAllHints() {
 
@@ -153,5 +166,14 @@ public class AdminServices {
 
     public List<QuestionAnswerEntity> getAllQuestionAndAnswer() {
         return  questionAndAnswerRepository.findAll();
+    }
+
+
+    public String getGraphJson() {
+        List<GraphEntity> graphEntities = graphJSONRepository.findAll();
+        GraphEntity graphEntity = graphEntities.get(0);
+        String graphData = graphEntity.getGraphData();
+        graphData = graphData.replaceAll("\\\\","");
+        return  graphData;
     }
 }

@@ -2,15 +2,10 @@ package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.controller;
 
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.Hint;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.GraphEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.HintsCollectionEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.TokenValidationRequest;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationResponse;
-import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserRegistrationRequest;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.*;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.service.AdminServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -57,9 +53,12 @@ public class AdminController {
         return adminServices.checkTokenValidity(request.getToken());
     }
     @PostMapping("/saveGraph")
-    public void getGraphJson(@RequestBody String graphJson) {
-        System.out.println("Check saveGraph Json"+graphJson);
-    }
+    public String saveGraphJson(@RequestBody String graphJson) {
+        logger.info("saveGraphJson Service called from AdminController with Input {}",graphJson);
+        GraphEntity graphEntity = new GraphEntity();
+        graphEntity.setGraphData(graphJson);
+        return adminServices.saveGraphJson(graphEntity);
+     }
 
     @PostMapping("/saveHints")
     public String saveHintsFromUser(@RequestBody HintsCollectionEntity hintsCollectionEntity){
@@ -84,6 +83,11 @@ public class AdminController {
     @GetMapping("/getAllQuestionAndAnswer")
     public List<QuestionAnswerEntity> getAllQuestionAndAnswer(){
         return adminServices.getAllQuestionAndAnswer();
+    }
+
+    @GetMapping("/getGraphJson")
+    public String getGraphJson(){
+        return adminServices.getGraphJson();
     }
 
 
