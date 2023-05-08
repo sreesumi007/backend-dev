@@ -60,19 +60,19 @@ public class AdminController {
     }
 
     @PostMapping("/saveHints")
-    public void getSaveHints(@RequestBody String saveHints) throws JsonProcessingException {
+    public void getSaveHints(@RequestBody HintsCollectionEntity saveHints) {
         System.out.println("Check saveHints Json"+saveHints);
-        ObjectMapper mapper = new ObjectMapper();
-        HintsCollectionEntity hintsCollectionEntity = mapper.readValue(saveHints, HintsCollectionEntity.class);
-        System.out.println("Check the mapped json - "+hintsCollectionEntity);
+//        ObjectMapper mapper = new ObjectMapper();
+//        HintsCollectionEntity hintsCollectionEntity = mapper.readValue(saveHints, HintsCollectionEntity.class);
+//        System.out.println("Check the mapped json - "+hintsCollectionEntity);
     }
 
     @PostMapping("/saveQuestionAnswer")
-    public void saveQuestionAnswer(@RequestBody String questionAnswerEntity) throws JsonProcessingException {
+    public void saveQuestionAnswer(@RequestBody QuestionAnswerEntity questionAnswerEntity) {
         System.out.println("Check questionAnswerEntity Json"+questionAnswerEntity);
-        ObjectMapper mapper = new ObjectMapper();
-        QuestionAnswerEntity question = mapper.readValue(questionAnswerEntity, QuestionAnswerEntity.class);
-        System.out.println("Check the mapped json - "+question);
+//        ObjectMapper mapper = new ObjectMapper();
+//        QuestionAnswerEntity question = mapper.readValue(questionAnswerEntity, QuestionAnswerEntity.class);
+//        System.out.println("Check the mapped json - "+question);
     }
 
 }
