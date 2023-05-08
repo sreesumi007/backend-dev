@@ -62,7 +62,7 @@ public class AdminController {
     }
 
     @PostMapping("/saveHints")
-    public String saveHintsFromUser(@RequestBody HintsCollectionEntity hintsCollectionEntity) throws JsonProcessingException {
+    public String saveHintsFromUser(@RequestBody HintsCollectionEntity hintsCollectionEntity){
         logger.info("saveHintsFromUser Service called from AdminController with Input {}",hintsCollectionEntity);
         return adminServices.saveHintsFromUser(hintsCollectionEntity);
     }
