@@ -2,12 +2,14 @@ package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.service;
 
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.config.JWTService;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.HintsCollectionEntity;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.Role;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.User;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationResponse;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserRegistrationRequest;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.HintsCollectionRepository;
+import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.QuestionAndAnswerRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,17 +24,21 @@ import java.util.List;
 public class AdminServices {
 
     private static final Logger logger = LogManager.getLogger(AdminServices.class);
-    private final UserRepository repository;
 
+    private static final String SUCCESS_RESPONSE = "Saved Successfully";
+    private final UserRepository repository;
     private final HintsCollectionRepository hintsRepository;
+
+    private final QuestionAndAnswerRepository questionAndAnswerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
-    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
+    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, QuestionAndAnswerRepository questionAndAnswerRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.hintsRepository = hintsRepository;
+        this.questionAndAnswerRepository = questionAndAnswerRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -126,11 +132,26 @@ public class AdminServices {
         catch (Exception e){
             logger.error("Exception occurred in saving the hints {}",e.getMessage().toString());
         }
-        return "Saved Successfully";
+        return SUCCESS_RESPONSE;
     }
+
+    public String saveQuestionAnswer(QuestionAnswerEntity questionAnswerEntity) {
+        try{
+            questionAndAnswerRepository.save(questionAnswerEntity);
+        }
+        catch (Exception e){
+            logger.error("Exception occurred in saving the Questions and Answer {}",e.getMessage().toString());
+        }
+        return SUCCESS_RESPONSE;
+    }
+
 
     public List<HintsCollectionEntity> getAllHints() {
 
-       return  hintsRepository.findAll();
+        return  hintsRepository.findAll();
+    }
+
+    public List<QuestionAnswerEntity> getAllQuestionAndAnswer() {
+        return  questionAndAnswerRepository.findAll();
     }
 }

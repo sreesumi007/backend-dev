@@ -68,8 +68,9 @@ public class AdminController {
     }
 
     @PostMapping("/saveQuestionAnswer")
-    public void saveQuestionAnswer(@RequestBody QuestionAnswerEntity questionAnswerEntity) {
-        System.out.println("Check questionAnswerEntity Json"+questionAnswerEntity);
+    public String saveQuestionAnswer(@RequestBody QuestionAnswerEntity questionAnswerEntity) {
+        logger.info("saveQuestionAnswer Service called from AdminController with Input {}",questionAnswerEntity);
+        return adminServices.saveQuestionAnswer(questionAnswerEntity);
 //        ObjectMapper mapper = new ObjectMapper();
 //        QuestionAnswerEntity question = mapper.readValue(questionAnswerEntity, QuestionAnswerEntity.class);
 //        System.out.println("Check the mapped json - "+question);
@@ -78,6 +79,11 @@ public class AdminController {
     @GetMapping("/getHints")
     public List<HintsCollectionEntity> getAllHints(){
         return adminServices.getAllHints();
+    }
+
+    @GetMapping("/getAllQuestionAndAnswer")
+    public List<QuestionAnswerEntity> getAllQuestionAndAnswer(){
+        return adminServices.getAllQuestionAndAnswer();
     }
 
 
