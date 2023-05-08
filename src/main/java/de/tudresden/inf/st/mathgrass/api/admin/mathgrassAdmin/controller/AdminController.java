@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/admin")
@@ -51,7 +53,7 @@ public class AdminController {
 
     @PostMapping("/tokenValidity")
     public boolean checkTokenValidity(@RequestBody TokenValidationRequest request){
-        logger.info("checkTokenValidity Service called from AdminController");
+        logger.info("checkTokenValidity Service called from AdminController with Input {}",request);
         return adminServices.checkTokenValidity(request.getToken());
     }
     @PostMapping("/saveGraph")
@@ -60,11 +62,9 @@ public class AdminController {
     }
 
     @PostMapping("/saveHints")
-    public void getSaveHints(@RequestBody HintsCollectionEntity saveHints) {
-        System.out.println("Check saveHints Json"+saveHints);
-//        ObjectMapper mapper = new ObjectMapper();
-//        HintsCollectionEntity hintsCollectionEntity = mapper.readValue(saveHints, HintsCollectionEntity.class);
-//        System.out.println("Check the mapped json - "+hintsCollectionEntity);
+    public String saveHintsFromUser(@RequestBody HintsCollectionEntity saveHints) {
+        logger.info("saveHintsFromUser Service called from AdminController with Input {}",saveHints);
+        return adminServices.saveHintsFromUser(saveHints);
     }
 
     @PostMapping("/saveQuestionAnswer")
@@ -74,5 +74,11 @@ public class AdminController {
 //        QuestionAnswerEntity question = mapper.readValue(questionAnswerEntity, QuestionAnswerEntity.class);
 //        System.out.println("Check the mapped json - "+question);
     }
+
+    @GetMapping("/getHints")
+    public List<HintsCollectionEntity> getAllHints(){
+        return adminServices.getAllHints();
+    }
+
 
 }
