@@ -1,5 +1,8 @@
 package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.config.JWTService;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.*;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
@@ -16,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -147,15 +152,16 @@ public class AdminServices {
     }
 
     public String saveGraphJson(GraphEntity graphEntity) {
-
+        String graphId = null; 
         try{
             graphJSONRepository.save(graphEntity);
+             graphId = String.valueOf(graphEntity.getId());
         }
         catch (Exception e){
             logger.error("Exception occurred in saving the Graph JSON {}",e.getMessage().toString());
         }
 
-        return SUCCESS_RESPONSE;
+        return graphId;
     }
 
 
@@ -176,4 +182,28 @@ public class AdminServices {
         graphData = graphData.replaceAll("\\\\","");
         return  graphData;
     }
+
+    public List<GraphEntity> getGraphEntities() throws SQLException, JsonProcessingException {
+//        List<GraphEntity> graphEntities = graphJSONRepository.findAll();
+
+//        Gson gson = new Gson();
+//
+//
+//        for (GraphEntity graphEntity : graphEntities) {
+//            String graphData = graphEntity.getGraphData();
+//
+//            // Deserialize the JSON string to an object
+//            Object jsonObject = gson.fromJson(graphData, Object.class);
+//
+//            logger.info("Check the Json object - {}",jsonObject);
+//            // Serialize the object back to a JSON string without escaping
+//            String unescapedGraphData = gson.toJson(jsonObject);
+//
+//            // Update the graphData in the entity
+//            graphEntity.setGraphData(unescapedGraphData);
+//        }
+
+        return graphJSONRepository.findAll();
+    }
+
 }

@@ -2,6 +2,7 @@ package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.controller;
 
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.GraphEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.HintsCollectionEntity;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.QuestionAnswerEntity;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,10 +55,11 @@ public class AdminController {
         return adminServices.checkTokenValidity(request.getToken());
     }
     @PostMapping("/saveGraph")
-    public String saveGraphJson(@RequestBody String graphJson) {
-        logger.info("saveGraphJson Service called from AdminController with Input {}",graphJson);
+    public String saveGraphJson(@RequestBody SaveGraphRequest saveGraphRequest) {
+        logger.info("saveGraphJson Service called from AdminController with Input {} Student Login {}",saveGraphRequest.getGraphJSON(),saveGraphRequest.getStudentLogin());
         GraphEntity graphEntity = new GraphEntity();
-        graphEntity.setGraphData(graphJson);
+        graphEntity.setGraphData(saveGraphRequest.getGraphJSON());
+        graphEntity.setIsStudentLoggedIn(saveGraphRequest.getStudentLogin());
         return adminServices.saveGraphJson(graphEntity);
      }
 
@@ -86,8 +89,11 @@ public class AdminController {
     }
 
     @GetMapping("/getGraphJson")
-    public String getGraphJson(){
-        return adminServices.getGraphJson();
+    public List<GraphEntity> getGraphJson() throws SQLException, JsonProcessingException {
+
+//        return adminServices.getGraphJson();
+        return adminServices.getGraphEntities();
+
     }
 
 
