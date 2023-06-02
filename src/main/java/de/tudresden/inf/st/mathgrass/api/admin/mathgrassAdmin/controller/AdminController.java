@@ -62,6 +62,11 @@ public class AdminController {
         graphEntity.setIsStudentLoggedIn(saveGraphRequest.getStudentLogin());
         return adminServices.saveGraphJson(graphEntity);
      }
+     @DeleteMapping("deleteGraphById/{id}")
+     public String cancelSavingConfirmation(@PathVariable Long id){
+        logger.info("Graph saving is cancelled by the user cancelSavingConfirmation by id {}",id);
+        return adminServices.deleteSaveGraphById(id);
+     }
 
     @PostMapping("/saveHints")
     public String saveHintsFromUser(@RequestBody HintsCollectionEntity hintsCollectionEntity){

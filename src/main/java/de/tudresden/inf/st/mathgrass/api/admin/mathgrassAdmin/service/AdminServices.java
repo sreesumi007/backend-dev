@@ -164,6 +164,19 @@ public class AdminServices {
         return graphId;
     }
 
+    public String deleteSaveGraphById(Long id) {
+
+        try{
+            graphJSONRepository.deleteById(id);
+
+        }
+        catch (Exception e){
+            logger.error("Exception occurred in Deleting the Graph JSON {}",e.getMessage().toString());
+        }
+
+        return "Deleted Successfully";
+    }
+
 
     public List<HintsCollectionEntity> getAllHints() {
 
@@ -205,5 +218,6 @@ public class AdminServices {
 
         return graphJSONRepository.findAll();
     }
+
 
 }
