@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
  */
 public abstract class AbstractApiElement {
     /**
-     * Check whether the element exists in a repository.
+     * Check whether the element exists in a repository.z
      *
      * @param id ID of element
      * @param repository repository in which element should be stored

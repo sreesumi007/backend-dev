@@ -1,8 +1,8 @@
 package de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.config.JWTService;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.entity.*;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.model.UserAuthenticationRequest;
@@ -12,6 +12,10 @@ import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.GraphJS
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.HintsCollectionRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.QuestionAndAnswerRepository;
 import de.tudresden.inf.st.mathgrass.api.admin.mathgrassAdmin.repository.UserRepository;
+import de.tudresden.inf.st.mathgrass.api.graph.Edge;
+import de.tudresden.inf.st.mathgrass.api.graph.Graph;
+import de.tudresden.inf.st.mathgrass.api.graph.GraphRepository;
+import de.tudresden.inf.st.mathgrass.api.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +34,7 @@ public class AdminServices {
     private static final String SUCCESS_RESPONSE = "Saved Successfully";
     private final UserRepository repository;
     private final HintsCollectionRepository hintsRepository;
+    private final GraphRepository graphRepository;
 
     private final GraphJSONRepository graphJSONRepository;
 
@@ -40,9 +44,10 @@ public class AdminServices {
 
     private final AuthenticationManager authenticationManager;
 
-    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, GraphJSONRepository graphJSONRepository, QuestionAndAnswerRepository questionAndAnswerRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
+    public AdminServices(UserRepository repository, HintsCollectionRepository hintsRepository, GraphRepository graphRepository, GraphJSONRepository graphJSONRepository, QuestionAndAnswerRepository questionAndAnswerRepository, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.hintsRepository = hintsRepository;
+        this.graphRepository = graphRepository;
         this.graphJSONRepository = graphJSONRepository;
         this.questionAndAnswerRepository = questionAndAnswerRepository;
         this.passwordEncoder = passwordEncoder;
@@ -65,7 +70,7 @@ public class AdminServices {
 
          }
         catch (Exception e){
-            logger.error("Error in saving the user data {}",e.getMessage().toString());
+            logger.error("Error in saving the user data {}", e.getMessage());
         }
         return registerResponse;
 
@@ -86,7 +91,7 @@ public class AdminServices {
 
         }
         catch (Exception e){
-            logger.error("Error in saving the user data {}",e.getMessage().toString());
+            logger.error("Error in saving the user data {}",e.getMessage());
         }
         return registerResponse;
 
@@ -112,7 +117,7 @@ public class AdminServices {
 
         }
         catch (Exception e){
-            logger.error("Error in authenticating the user {}",e.getMessage().toString());
+            logger.error("Error in authenticating the user {}",e.getMessage());
         }
 
         return authResponse;
@@ -125,7 +130,7 @@ public class AdminServices {
         }
         catch (Exception e){
             jwtExpiration = true;
-            logger.error("Token Expired {}", e.getMessage().toString());
+            logger.error("Token Expired {}", e.getMessage());
         }
         logger.info(jwtExpiration);
         return jwtExpiration;
@@ -136,7 +141,7 @@ public class AdminServices {
                 hintsRepository.save(saveHints);
         }
         catch (Exception e){
-            logger.error("Exception occurred in saving the hints {}",e.getMessage().toString());
+            logger.error("Exception occurred in saving the hints {}",e.getMessage());
         }
         return SUCCESS_RESPONSE;
     }
@@ -146,7 +151,7 @@ public class AdminServices {
             questionAndAnswerRepository.save(questionAnswerEntity);
         }
         catch (Exception e){
-            logger.error("Exception occurred in saving the Questions and Answer {}",e.getMessage().toString());
+            logger.error("Exception occurred in saving the Questions and Answer {}",e.getMessage());
         }
         return SUCCESS_RESPONSE;
     }
@@ -158,7 +163,7 @@ public class AdminServices {
              graphId = String.valueOf(graphEntity.getId());
         }
         catch (Exception e){
-            logger.error("Exception occurred in saving the Graph JSON {}",e.getMessage().toString());
+            logger.error("Exception occurred in saving the Graph JSON {}",e.getMessage());
         }
 
         return graphId;
@@ -167,11 +172,12 @@ public class AdminServices {
     public String deleteSaveGraphById(Long id) {
 
         try{
-            graphJSONRepository.deleteById(id);
+//            graphJSONRepository.deleteById(id);
+            graphRepository.deleteById(id);
 
         }
         catch (Exception e){
-            logger.error("Exception occurred in Deleting the Graph JSON {}",e.getMessage().toString());
+            logger.error("Exception occurred in Deleting the Graph JSON {}",e.getMessage());
         }
 
         return "Deleted Successfully";
@@ -196,28 +202,107 @@ public class AdminServices {
         return  graphData;
     }
 
-    public List<GraphEntity> getGraphEntities() throws SQLException, JsonProcessingException {
-//        List<GraphEntity> graphEntities = graphJSONRepository.findAll();
+//    public List<GraphEntity> getGraphEntities() {
+////
+////
+////        return graphJSONRepository.findAll();
+////    }
 
-//        Gson gson = new Gson();
-//
-//
-//        for (GraphEntity graphEntity : graphEntities) {
-//            String graphData = graphEntity.getGraphData();
-//
-//            // Deserialize the JSON string to an object
-//            Object jsonObject = gson.fromJson(graphData, Object.class);
-//
-//            logger.info("Check the Json object - {}",jsonObject);
-//            // Serialize the object back to a JSON string without escaping
-//            String unescapedGraphData = gson.toJson(jsonObject);
-//
-//            // Update the graphData in the entity
-//            graphEntity.setGraphData(unescapedGraphData);
-//        }
+    public List<Graph> getGraphEntities() {
 
-        return graphJSONRepository.findAll();
+
+        return  graphRepository.findAll();
     }
 
 
+    public String jsonBuilderForGraph(JsonArray cellsArray) {
+
+        Graph graph = new Graph();
+        try{
+            List<Vertex> vertices = new ArrayList<>();
+            List<Edge> edges = new ArrayList<>();
+
+            for (JsonElement element : cellsArray) {
+                JsonObject cellObject = element.getAsJsonObject();
+
+                // Check the type of the cell
+                String cellType = cellObject.get("type").getAsString();
+
+                if (cellType.equals("standard.Rectangle") || cellType.equals("standard.Circle")) {
+                    // Create a new Vertex object
+                    Vertex vertex = new Vertex();
+                    JsonObject attrsObject = cellObject.getAsJsonObject("attrs");
+                    JsonObject bodyObject = attrsObject.getAsJsonObject("body");
+                    JsonObject labelObject = attrsObject.getAsJsonObject("label");
+                    JsonObject positionObject = cellObject.getAsJsonObject("position");
+
+                    int x = positionObject.get("x").getAsInt();
+                    int y = positionObject.get("y").getAsInt();
+                    String stroke = String.valueOf(bodyObject.get("stroke"));
+                    String label = String.valueOf(labelObject.get("text"));
+
+
+                    vertex.setX(x);
+                    vertex.setY(y);
+                    vertex.setLabel(label);
+                    vertex.setVertexId(cellObject.get("id").getAsString());
+                    vertex.setVertexStroke(stroke);
+                    vertex.setVertexType(cellObject.get("type").getAsString());
+
+                    vertices.add(vertex);
+                } else if (cellType.equals("standard.Link")) {
+                    // Create a new Edge object
+                    Edge edge = new Edge();
+
+                    JsonObject sourceObject = cellObject.getAsJsonObject("source");
+                    String sourceId = sourceObject.get("id").getAsString();
+                    Vertex sourceVertex = findVertexById(vertices, sourceId);
+                    edge.setSourceVertex(sourceVertex);
+
+                    JsonObject targetObject = cellObject.getAsJsonObject("target");
+                    String targetId = targetObject.get("id").getAsString();
+                    Vertex targetVertex = findVertexById(vertices, targetId);
+                    edge.setTargetVertex(targetVertex);
+
+//                    JsonObject labelsObject = cellObject.getAsJsonObject("labels");
+//                    JsonObject attrsObject = labelsObject.getAsJsonObject("attrs");
+//                    JsonObject textObject1 = attrsObject.getAsJsonObject("text");
+//                    String inputLink = String.valueOf(attrsObject.get("text"));
+                    JsonArray labelsArray = cellObject.getAsJsonArray("labels");
+                    if (labelsArray != null && labelsArray.size() > 0) {
+                        JsonObject labelObject = labelsArray.get(0).getAsJsonObject()
+                                .getAsJsonObject("attrs")
+                                .getAsJsonObject("text");
+                        String labelText = labelObject.get("text").getAsString();
+                        edge.setLabel(labelText);
+                    }
+                    edge.setEdgeId(cellObject.get("id").getAsString());
+//                    edge.setLabel("inputLink");
+                    edges.add(edge);
+                }
+            }
+
+            graph.setVertices(vertices);
+            graph.setEdges(edges);
+
+            graphRepository.save(graph);
+            logger.error(graph.getVertices().toString());
+
+
+        }
+        catch (Exception e){
+            logger.error("Exception in json parsing {}",e.getMessage());
+
+        }
+
+        return String.valueOf(graph.getId());
+    }
+    private static Vertex findVertexById(List<Vertex> vertices, String sourceId) {
+        for (Vertex vertex : vertices) {
+            if (vertex.getVertexId().equals(sourceId)) {
+                return vertex;
+            }
+        }
+        return null;
+    }
 }

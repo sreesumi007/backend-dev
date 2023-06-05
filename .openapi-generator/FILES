@@ -12,6 +12,7 @@ src/generated/java/de/tudresden/inf/st/mathgrass/api/model/GraphDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/HintDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/LabelDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/QuestionDTO.java
+src/generated/java/de/tudresden/inf/st/mathgrass/api/model/SrkDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/TaskCollectionDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/TaskDTO.java
 src/generated/java/de/tudresden/inf/st/mathgrass/api/model/TaskIdLabelTupleDTO.java

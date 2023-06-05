@@ -61,10 +61,7 @@ public class MathgrassServerApplication {
     @EnableWebSecurity
     public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //        Sreeram Change for Admin Interface - Starts
-//        @Override
-//        protected void configure(HttpSecurity http) throws Exception {
-//            http.cors().and().csrf().disable();
-//        }
+
 
         private final JWTAuthenticationFilter jwtAuthFilter;
 

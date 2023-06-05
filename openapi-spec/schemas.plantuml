@@ -44,6 +44,13 @@ entity QuestionDTO {
     * question: String
 }
 
+entity SrkDTO {
+    * id: Long
+    * x: Integer
+    * y: Integer
+    label: String
+}
+
 entity TaskCollectionDTO {
     id: Long
     label: String
