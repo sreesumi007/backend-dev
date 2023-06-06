@@ -7,6 +7,7 @@ entity EdgeDTO {
     * firstVertex: VertexDTO
     * secondVertex: VertexDTO
     label: String
+    edgeId: String
 }
 
 entity EvaluateAnswer200Response {
@@ -27,6 +28,7 @@ entity GraphDTO {
     labels: List<LabelDTO>
     * edges: List<EdgeDTO>
     * vertices: List<VertexDTO>
+    isStudentLoggedId: String
 }
 
 entity HintDTO {
@@ -42,13 +44,6 @@ entity LabelDTO {
 
 entity QuestionDTO {
     * question: String
-}
-
-entity SrkDTO {
-    * id: Long
-    * x: Integer
-    * y: Integer
-    label: String
 }
 
 entity TaskCollectionDTO {
@@ -88,6 +83,9 @@ entity VertexDTO {
     * x: Integer
     * y: Integer
     label: String
+    vertexId: String
+    vertexType: String
+    vertexStroke: String
 }
 
 

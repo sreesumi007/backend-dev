@@ -36,6 +36,16 @@ public class Graph {
     @OneToMany(cascade = {CascadeType.ALL,CascadeType.MERGE},orphanRemoval = true)
     private List<Vertex> vertices;
 
+    private String isStudentLoggedId;
+
+    public String getIsStudentLoggedId() {
+        return isStudentLoggedId;
+    }
+
+    public void setIsStudentLoggedId(String isStudentLoggedId) {
+        this.isStudentLoggedId = isStudentLoggedId;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

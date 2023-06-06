@@ -215,33 +215,27 @@ public class AdminServices {
     }
 
 
-    public String jsonBuilderForGraph(JsonArray cellsArray) {
+    public String buildGraphAndSave(JsonArray cellsArray,String studentLogin) {
 
         Graph graph = new Graph();
         try{
             List<Vertex> vertices = new ArrayList<>();
             List<Edge> edges = new ArrayList<>();
-
             for (JsonElement element : cellsArray) {
                 JsonObject cellObject = element.getAsJsonObject();
-
-                // Check the type of the cell
                 String cellType = cellObject.get("type").getAsString();
 
                 if (cellType.equals("standard.Rectangle") || cellType.equals("standard.Circle")) {
-                    // Create a new Vertex object
+
                     Vertex vertex = new Vertex();
                     JsonObject attrsObject = cellObject.getAsJsonObject("attrs");
                     JsonObject bodyObject = attrsObject.getAsJsonObject("body");
                     JsonObject labelObject = attrsObject.getAsJsonObject("label");
                     JsonObject positionObject = cellObject.getAsJsonObject("position");
-
                     int x = positionObject.get("x").getAsInt();
                     int y = positionObject.get("y").getAsInt();
                     String stroke = String.valueOf(bodyObject.get("stroke"));
                     String label = String.valueOf(labelObject.get("text"));
-
-
                     vertex.setX(x);
                     vertex.setY(y);
                     vertex.setLabel(label);
@@ -263,11 +257,6 @@ public class AdminServices {
                     String targetId = targetObject.get("id").getAsString();
                     Vertex targetVertex = findVertexById(vertices, targetId);
                     edge.setTargetVertex(targetVertex);
-
-//                    JsonObject labelsObject = cellObject.getAsJsonObject("labels");
-//                    JsonObject attrsObject = labelsObject.getAsJsonObject("attrs");
-//                    JsonObject textObject1 = attrsObject.getAsJsonObject("text");
-//                    String inputLink = String.valueOf(attrsObject.get("text"));
                     JsonArray labelsArray = cellObject.getAsJsonArray("labels");
                     if (labelsArray != null && labelsArray.size() > 0) {
                         JsonObject labelObject = labelsArray.get(0).getAsJsonObject()
@@ -277,24 +266,19 @@ public class AdminServices {
                         edge.setLabel(labelText);
                     }
                     edge.setEdgeId(cellObject.get("id").getAsString());
-//                    edge.setLabel("inputLink");
                     edges.add(edge);
                 }
             }
-
             graph.setVertices(vertices);
             graph.setEdges(edges);
-
+            graph.setIsStudentLoggedId(studentLogin);
             graphRepository.save(graph);
             logger.error(graph.getVertices().toString());
-
-
         }
         catch (Exception e){
             logger.error("Exception in json parsing {}",e.getMessage());
 
         }
-
         return String.valueOf(graph.getId());
     }
     private static Vertex findVertexById(List<Vertex> vertices, String sourceId) {

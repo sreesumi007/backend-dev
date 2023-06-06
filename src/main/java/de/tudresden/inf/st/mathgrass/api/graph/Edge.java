@@ -21,8 +21,10 @@ public class Edge {
      */
 
     private String label;
-    private String edgeId;
 
+    //Changes for Admin Interface - Starts
+    private String edgeId;
+    //Changes for Admin Interface - Ends
     /**
      * Source vertex.
      */
